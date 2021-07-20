@@ -7,5 +7,11 @@
 </head>
 <body>
     <h1 class ="login">用户登录</h1>
+
+<form action="${pageContext.request.contextPath}/user/user" method="post">
+     用户名：<input tpye="text" name="username"> <br/>
+    密码：<input type="password" name="password"><br/>
+    <input type="submit" value="登录">
+</form>
 </body>
 </html>
