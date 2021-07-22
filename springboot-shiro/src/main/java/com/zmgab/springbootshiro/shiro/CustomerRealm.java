@@ -28,8 +28,7 @@ public class CustomerRealm extends AuthorizingRealm {
         User byName = service.findByName(principal);
         System.out.println(byName);
         if (byName.getUsername().equals(principal)) {
-            return new SimpleAuthenticationInfo(principal, byName.getPassword(), ByteSource.Util.bytes(byName.getSalt()),
-                    this.getName());
+            return new SimpleAuthenticationInfo(principal, byName.getPassword(), ByteSource.Util.bytes(byName.getSalt()), this.getName());
         }
         return null;
     }

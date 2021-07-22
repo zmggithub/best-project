@@ -1,6 +1,7 @@
 package com.zmgab.springbootshiro.config;
 
 import com.zmgab.springbootshiro.shiro.CustomerRealm;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -59,6 +60,10 @@ public class ShiroConfig {
     @Bean
     public Realm getRealm() {
         CustomerRealm customerRealm = new CustomerRealm();
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName("MD5");
+        hashedCredentialsMatcher.setHashIterations(1024);
+        customerRealm.setCredentialsMatcher(hashedCredentialsMatcher);
         return customerRealm;
     }
 }
