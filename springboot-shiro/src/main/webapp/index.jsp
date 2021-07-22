@@ -8,6 +8,7 @@
 <body>
     <div class="logo">web</div>
     <h1 class ="login">系统主页V1.0</h1>
+    <a href="${pageContext.request.contextPath}/user/logout">退出登录</a>
     <ul>
         <li>用户管理</li>
         <li>商品管理</li>

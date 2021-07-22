@@ -28,8 +28,15 @@ public class ShiroConfig {
         // 配置系统受限资源
         // 配置系统公共资源
         Map<String, String> map = new HashMap<>();
-        map.put("/index.jsp", "authc"); // authc 请求这个资源需要认证和授权
-//        map.put("/**", "authc");
+        map.put("/user/login", "anon"); // anon 设置为公共资源
+        map.put("/user/register", "anon");
+        map.put("/register.jsp", "anon");
+
+//        map.put("/index.jsp", "authc"); //authc 请求这个资源需要认证和授权
+
+        // 配置通配符
+          map.put("/**", "authc");
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
 
         // 默认认证界面路径 代码中默认是会访问login.jsp，对jsp友好。
