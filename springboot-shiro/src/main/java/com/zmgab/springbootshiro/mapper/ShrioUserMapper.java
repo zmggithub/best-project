@@ -17,4 +17,6 @@ public interface ShrioUserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    User selectByUsername(String username);
 }

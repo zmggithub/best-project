@@ -1,5 +1,6 @@
 package com.zmgab.springbootshiro.controller;
 
+import com.zmgab.springbootshiro.entity.User;
 import com.zmgab.springbootshiro.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -17,12 +18,20 @@ public class UserController {
     @Autowired
     UserService service;
 
+
+
     @RequestMapping("register")
-    public String register() {
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();
-        System.out.println("已退出登录！");
-        return "redirect:/login.jsp";
+    public String register(User user) {
+        try {
+            service.register(user);
+            System.out.println("保存成功");
+            return "redirect:/login.jsp";
+        } catch (Exception e) {
+            System.out.println("保存失败");
+            e.printStackTrace();
+            return "redirect:/register.jsp";
+        }
+
 
     }
 

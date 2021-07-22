@@ -63,4 +63,7 @@
     `password` = #{password,jdbcType=VARCHAR}, username = #{username,jdbcType=VARCHAR}, salt = #{salt,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="selectByUsername" resultMap="BaseResultMap" parameterType="String">
+      select id, `password`, username, salt from shrio_user where username = #{username}
+    </select>
 </mapper>
