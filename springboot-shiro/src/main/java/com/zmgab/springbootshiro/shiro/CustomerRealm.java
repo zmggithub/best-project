@@ -1,5 +1,7 @@
 package com.zmgab.springbootshiro.shiro;
 
+import com.zmgab.springbootshiro.entity.Perms;
+import com.zmgab.springbootshiro.entity.Role;
 import com.zmgab.springbootshiro.entity.User;
 import com.zmgab.springbootshiro.service.UserService;
 import org.apache.shiro.authc.AuthenticationException;
@@ -11,7 +13,10 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class CustomerRealm extends AuthorizingRealm {
 
@@ -26,15 +31,27 @@ public class CustomerRealm extends AuthorizingRealm {
         System.out.println("调用授权验证：" + primaryPrincipal);
 
         // 根据主身份信息获取角色 和 权限信息
-        if ("zmg".equals(primaryPrincipal)) {
-            SimpleAuthorizationInfo sai = new SimpleAuthorizationInfo();
-            // user admin guest
-            sai.addRole("user");
+        User user = service.findRolesByUserName(primaryPrincipal);
+        List<Role> roles = user.getRoles();
 
-            sai.addStringPermission("user:*:*");
+        // 授权角色信息
+        if (!CollectionUtils.isEmpty(roles)) {
+            SimpleAuthorizationInfo sai = new SimpleAuthorizationInfo();
+            roles.forEach( r -> {
+                System.out.println(r);
+                sai.addRole(r.getName());
+
+                // 权限信息
+                List<Perms> perms = service.findPermsByRoleId(r.getId());
+                if (!CollectionUtils.isEmpty(perms)) {
+                    perms.forEach(p -> {
+                        System.out.println(p);
+                        sai.addStringPermission(p.getName());
+                    });
+                }
+            });
             return sai;
         }
-
         return null;
     }
 

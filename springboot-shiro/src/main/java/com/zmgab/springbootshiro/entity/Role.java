@@ -11,14 +11,12 @@ import java.util.List;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Role {
 
-    String id;
-    String password;
-    String username;
-    String salt;
+    private String id;
+    private String name;
 
-    //定义角色集合
-    private List<Role> roles;
+    //定义权限的集合
+    private List<Perms> perms;
 
 }

@@ -1,6 +1,9 @@
 package com.zmgab.springbootshiro.service;
 
+import com.zmgab.springbootshiro.entity.Perms;
 import com.zmgab.springbootshiro.entity.User;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -9,4 +12,7 @@ public interface UserService {
 
     User findByName(String username);
 
+    User findRolesByUserName(String username);
+
+    List<Perms> findPermsByRoleId(String id);
 }

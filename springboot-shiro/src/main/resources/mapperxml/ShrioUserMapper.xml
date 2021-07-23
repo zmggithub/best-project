@@ -6,6 +6,10 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <collection property="roles" ofType="com.zmgab.springbootshiro.entity.Role" javaType="list">
+      <id column="uid" property="id"/>
+      <result column="rname" property="name"/>
+    </collection>
   </resultMap>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -65,5 +69,32 @@
   </update>
     <select id="selectByUsername" resultMap="BaseResultMap" parameterType="String">
       select id, `password`, username, salt from shrio_user where username = #{username}
+    </select>
+
+    <select id="findRolesByUserName" resultMap="BaseResultMap"  parameterType="String">
+      SELECT
+        u.id,u.username,r.id uid,r.name rname
+      FROM
+        shrio_user u
+        LEFT JOIN shiro_user_role ur
+          ON u.id = ur.`userid`
+        LEFT JOIN shiro_role r
+          ON r.id = ur.`roleid`
+      WHERE u.username = #{username}
+
+
+    </select>
+
+
+    <select id="findPermsByRoleId" resultType="com.zmgab.springbootshiro.entity.Perms" parameterType="String">
+      SELECT
+        p.id, p.url, p.name
+      FROM
+        shiro_role r
+        LEFT JOIN shiro_role_perms rp
+          ON r.id = rp.roleid
+        LEFT JOIN shiro_perms p
+          ON rp.permsid = p.id
+          WHERE r.id = #{id}
     </select>
 </mapper>
