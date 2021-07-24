@@ -9,6 +9,14 @@
 <body>
     <div class="logo">web</div>
     <h1 class ="login">系统主页V1.0</h1>
+
+    <%-- 用户身份信息 --%>
+    <h1><shiro:principal/></h1>
+
+    <shiro:authenticated>认证之后展示的内容</shiro:authenticated> <br>
+
+    <shiro:notAuthenticated> 没有认证之后展示的内容</shiro:notAuthenticated><br>
+
     <a href="${pageContext.request.contextPath}/user/logout">退出登录</a>
     <ul>
         <shiro:hasAnyRoles name="user,admin">

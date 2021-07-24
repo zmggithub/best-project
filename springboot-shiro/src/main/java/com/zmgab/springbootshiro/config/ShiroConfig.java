@@ -30,8 +30,9 @@ public class ShiroConfig {
         // 配置系统受限资源
         // 配置系统公共资源
         Map<String, String> map = new HashMap<>();
-        map.put("/user/login", "anon"); // anon 设置为公共资源
-        map.put("/user/register", "anon");
+        map.put("/user/login", "anon"); // anon 设置为公共资源 放行资源放在下面
+        map.put("/user/register", "anon"); // 设置为公共资源 放行资源放在下面
+        map.put("/user/getImage", "anon"); // 设置为公共资源 放行生成验证码
         map.put("/register.jsp", "anon");
 
 //        map.put("/index.jsp", "authc"); //authc 请求这个资源需要认证和授权
