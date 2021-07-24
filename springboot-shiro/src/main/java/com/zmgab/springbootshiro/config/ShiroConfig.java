@@ -1,6 +1,7 @@
 package com.zmgab.springbootshiro.config;
 
 import com.zmgab.springbootshiro.shiro.CustomerRealm;
+import com.zmgab .springbootshiro.shiro.RedisCacheManager;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -64,6 +65,16 @@ public class ShiroConfig {
         hashedCredentialsMatcher.setHashAlgorithmName("MD5");
         hashedCredentialsMatcher.setHashIterations(1024);
         customerRealm.setCredentialsMatcher(hashedCredentialsMatcher);
+
+        // 开启缓存管理
+//        customerRealm.setCacheManager(new EhCacheManager());
+        customerRealm.setCacheManager(new RedisCacheManager());
+        customerRealm.setCachingEnabled(true); // 开启全局缓存
+        customerRealm.setAuthenticationCachingEnabled(true); // 开启认证缓存
+        customerRealm.setAuthenticationCacheName("authenticationCache");
+        customerRealm.setAuthorizationCachingEnabled(true); // 开启授权缓存
+        customerRealm.setAuthorizationCacheName("authorizationCache");
+
         return customerRealm;
     }
 }

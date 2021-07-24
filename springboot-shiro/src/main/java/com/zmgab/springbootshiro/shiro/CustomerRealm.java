@@ -4,6 +4,7 @@ import com.zmgab.springbootshiro.entity.Perms;
 import com.zmgab.springbootshiro.entity.Role;
 import com.zmgab.springbootshiro.entity.User;
 import com.zmgab.springbootshiro.service.UserService;
+import com.zmgab.springbootshiro.util.MyByteSource;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -61,7 +62,12 @@ public class CustomerRealm extends AuthorizingRealm {
         User byName = service.findByName(principal);
         System.out.println(byName);
         if (byName.getUsername().equals(principal)) {
-            return new SimpleAuthenticationInfo(principal, byName.getPassword(), ByteSource.Util.bytes(byName.getSalt()), this.getName());
+            return new SimpleAuthenticationInfo(
+                    principal,
+                    byName.getPassword(),
+                    new MyByteSource(byName.getSalt()),
+                    this.getName()
+            );
         }
         return null;
     }
