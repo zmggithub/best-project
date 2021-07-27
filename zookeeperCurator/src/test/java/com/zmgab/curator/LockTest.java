@@ -15,8 +15,6 @@ import org.junit.Test;
  */
 public class LockTest {
 
-    CuratorFramework client;
-
     public static void main(String[] args) {
 
         Ticket12306 ticket = new Ticket12306();
