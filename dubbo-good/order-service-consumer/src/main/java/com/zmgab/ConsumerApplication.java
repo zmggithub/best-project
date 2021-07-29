@@ -1,7 +1,9 @@
 package com.zmgab;
 
 import java.io.IOException;
+import java.util.List;
 
+import com.zmgab.gmall.bean.UserAddress;
 import com.zmgab.gmall.service.OrderService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -12,7 +14,7 @@ public class ConsumerApplication {
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("consumer.xml");
 		
 		OrderService orderService = applicationContext.getBean(OrderService.class);
-		
+
 		orderService.initOrder("1");
 		System.out.println("调用完成....");
 		System.in.read();

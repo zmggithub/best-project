@@ -11,8 +11,9 @@
 
 
 	<dubbo:application name="order-service-consumer"></dubbo:application>
-	
-	<dubbo:registry address="zookeeper://192.168.153.190:2181"></dubbo:registry>
+
+	<!-- 配置当前消费者的统一规则：所有的服务都不检查,为true时启动时检查-->
+	<dubbo:registry address="zookeeper://192.168.153.190:2181" check="false"></dubbo:registry>
 	
 	<!--  配置本地存根-->
 	
@@ -29,10 +30,10 @@
 		<!-- <dubbo:method name="getUserAddressList" timeout="1000"></dubbo:method> -->
 	</dubbo:reference>
 		
-	<!-- 配置当前消费者的统一规则：所有的服务都不检查 -->
+	<!-- 配置当前消费者的统一规则：所有的服务都不检查,为true时启动时检查-->
 	<dubbo:consumer check="false" timeout="5000"></dubbo:consumer>
 
 	<dubbo:monitor protocol="registry"></dubbo:monitor>
-	<!-- <dubbo:monitor address="127.0.0.1:7070"></dubbo:monitor> -->
+	 <!--<dubbo:monitor address="192.168.153.190:7070"></dubbo:monitor>-->
 	
 </beans>

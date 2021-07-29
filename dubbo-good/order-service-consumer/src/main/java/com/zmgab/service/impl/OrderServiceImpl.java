@@ -17,11 +17,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     UserService userService;
 
-    public void initOrder(String userId) {
+    public List<UserAddress> initOrder(String userId) {
         System.out.println("userId ; " + userId);
         // 查询用户的收货地址
         List<UserAddress> userAddressList = userService.getUserAddressList(userId);
         userAddressList.forEach(System.out::println);
-
+        return userAddressList;
     }
 }
