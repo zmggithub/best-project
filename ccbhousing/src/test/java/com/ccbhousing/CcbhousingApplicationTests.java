@@ -1,4 +1,4 @@
-package com.ccbhousing.ccbhousing;
+package com.ccbhousing;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
