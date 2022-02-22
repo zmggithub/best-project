@@ -20,7 +20,7 @@ public class Ticket12306 implements Runnable {
                 .retryPolicy(retry).namespace("zmgab").build();
         client.start();
 
-        lock = new InterProcessMutex(client, "lock");
+        lock = new InterProcessMutex(client, "/lock");
     }
 
     @Override

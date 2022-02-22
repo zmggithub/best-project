@@ -12,7 +12,7 @@ public class JobListenerDemo {
 
         // 2:任务实例(JobDetail)
         JobDetail build = JobBuilder.newJob(ListenerHello.class)
-                .withIdentity("job1", "group1")
+                .withIdentity("job2", "group1")
                 .build();
 
         // 3:触发器 (Trigger)
@@ -30,7 +30,10 @@ public class JobListenerDemo {
         // 创建并注册一个全局的JobListener
         // scheduler.getListenerManager().addJobListener(new MyJobListener(), EverythingMatcher.allJobs());
         // 创建并注册一个局部的JobListener
-        scheduler.getListenerManager().addJobListener(new MyJobListener(),KeyMatcher.keyEquals(JobKey.jobKey("job2", "group1")));
+        MyJobListener myJobListener = new MyJobListener();
+        JobKey jobKey = JobKey.jobKey("job2", "group1");
+        KeyMatcher<JobKey> jobKeyKeyMatcher = KeyMatcher.keyEquals(jobKey);
+        scheduler.getListenerManager().addJobListener(myJobListener,jobKeyKeyMatcher);
 
         scheduler.start();
     }
