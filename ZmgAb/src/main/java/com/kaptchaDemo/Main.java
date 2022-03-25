@@ -1,5 +1,7 @@
 package com.kaptchaDemo;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Main {
 
     /**
@@ -9,6 +11,11 @@ public class Main {
 
 
     // 三.将外部jar打入本地maven仓库
-//    mvn install:install-file -Dfile=C:/Users/bianying/Desktop/ojdbc-master/ojdbc7.jar -DgroupId=com.oracle -DartifactId=ojdbc7 -Dversion=12.1.0.2 -Dpackaging=jar
+    // mvn install:install-file -Dfile=C:/Users/bianying/Desktop/ojdbc-master/ojdbc7.jar -DgroupId=com.oracle -DartifactId=ojdbc7 -Dversion=12.1.0.2 -Dpackaging=jar
+    public static void main(String[] args) {
 
+
+        AtomicInteger i = new AtomicInteger();
+
+    }
 }
