@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: client-demo
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.135.1:8848
+      config:
+          file-extension: yml
+          prefix: zhumingguang
+          server-addr: 192.168.135.1:8848
+server:
+  port: 7000
+
+logging:
+  level:
+    root: info
