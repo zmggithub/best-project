@@ -15,3 +15,12 @@ server:
 logging:
   level:
     root: info
+
+common:
+  name: zhangsan
+  age: 10
+
+
+
+
+logging.level.com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder: debug
