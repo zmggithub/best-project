@@ -11,6 +11,7 @@
     <modules>
         <module>ServerDemo</module>
         <module>ClientDemo</module>
+        <module>ConfigDemo</module>
     </modules>
 
     <properties>

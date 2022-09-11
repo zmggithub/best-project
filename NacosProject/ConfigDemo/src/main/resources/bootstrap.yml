@@ -1,6 +1,6 @@
 spring:
   application:
-    name: client-demo
+    name: config-demo
   cloud:
     nacos:
       discovery:
@@ -10,7 +10,7 @@ spring:
           prefix: zhumingguang
           server-addr: 192.168.153.1:8848
 server:
-  port: 7000
+  port: 7005
 
 logging:
   level:

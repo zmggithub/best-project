@@ -17,18 +17,20 @@ import java.util.concurrent.Executor;
 public class ConfigServerDemo {
 
     public static void main(String[] args) throws NacosException, InterruptedException {
-        String serverAddr = "localhost:8848";
+
+        Properties properties = new Properties();
+        properties.put(PropertyKeyConst.SERVER_ADDR, "localhost:8848");
+        properties.put(PropertyKeyConst.NAMESPACE, "zhumingguang");
+
         String dataId = "nacos-config-demo.yaml";
         String group = "DEFAULT_GROUP";
-        Properties properties = new Properties();
-        properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
-        
+
         //获取配置中心服务
         ConfigService configService = NacosFactory.createConfigService(properties);
         
         //从配置中心拉取配置
         String content = configService.getConfig(dataId, group, 5000);
-        System.out.println(content);
+        System.out.println("从配置中心拉取配置:" + content);
         //注册监听器
         configService.addListener(dataId, group, new Listener() {
 
@@ -42,24 +44,24 @@ public class ConfigServerDemo {
         });
 
         //发布配置
-        //boolean isPublishOk = configService.publishConfig(dataId, group, "content");
-        //System.out.println(isPublishOk);
-        //发送properties格式
+        boolean isPublishOk = configService.publishConfig(dataId, group, "content");
+        System.out.println(isPublishOk);
+//        发送properties格式
         configService.publishConfig(dataId,group,"common.age=30", ConfigType.PROPERTIES.getType());
 
 
-//        Thread.sleep(3000);
+        Thread.sleep(3000);
 //        //从配置中心拉取配置
-//        content = configService.getConfig(dataId, group, 5000);
-//        System.out.println(content);
+        content = configService.getConfig(dataId, group, 5000);
+        System.out.println(content);
 
-//        boolean isRemoveOk = configService.removeConfig(dataId, group);
-//        System.out.println(isRemoveOk);
-//        Thread.sleep(3000);
+        boolean isRemoveOk = configService.removeConfig(dataId, group);
+        System.out.println(isRemoveOk);
+        Thread.sleep(3000);
 
-//        content = configService.getConfig(dataId, group, 5000);
-//        System.out.println(content);
-//        Thread.sleep(300000);
+        content = configService.getConfig(dataId, group, 5000);
+        System.out.println(content);
+        Thread.sleep(300000);
         
         
         Thread.sleep(Integer.MAX_VALUE);

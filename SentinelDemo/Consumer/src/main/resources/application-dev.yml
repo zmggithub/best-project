@@ -1,0 +1,79 @@
+server:
+  port: 18880
+
+provider:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule  # 修改默认负载均衡策略 随机RandomRule...
+
+#暴露spring-boot-starter-actuator端点   http://localhost:8081/actuator/sentinel
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+spring:
+  application:
+    name: consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 39.97.119.211:8848
+    sentinel:
+      transport:
+        # 添加sentinel的控制台地址
+        dashboard: 127.0.0.1:8080
+        # 指定应用与Sentinel控制台交互的端口，应用本地会起一个该端口占用的HttpServer
+        port: 8720
+#      eager: true
+      # 将其配置为 false 即可根据不同的 URL 进行链路限流
+      #web-context-unify: false
+      # 从nacos配置中心拉取规则信息
+#      datasource:
+#        flow-rules: #流控规则
+#          nacos:
+#            server-addr: 127.0.0.1:8848
+#            dataId: ${spring.application.name}-flow-rules
+#            groupId: SENTINEL_GROUP   # 注意groupId对应Sentinel Dashboard中的定义
+#            data-type: json
+#            rule-type: flow
+
+  datasource:
+    url: jdbc:mysql://39.105.156.120:3306/xxl_job?useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: xxljob
+    password: xxljob
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+  hikari:
+    minimum-idle: 5
+    maximum-pool-size: 15
+    auto-commit: true
+    idle-timeout: 600000
+    pool-name: DatebookHikariCP
+    max-lifetime: 28740000
+    connection-timeout: 300000
+    connection-test-query: SELECT 1
+
+mybatis-plus:
+  mapper-locations: classpath:/com/kayak/executor/batch/mapper/xml/*.xml
+  global-config:
+    db-config:
+      id-type: INPUT #自增主键类型
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    banner: false
+  configuration:
+    # 返回类型为Map,显示null对应的字段
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true #配置返回数据库(下划线<->驼峰命名)，自动匹配无需as
+    cache-enabled: false
+    jdbc-type-for-null: 'null' #配置JdbcTypeForNull, oracle数据库必须配置
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl     #开启sql日志打印配置
+    database-id: mysql #数据库id
+
+
+
+
+
