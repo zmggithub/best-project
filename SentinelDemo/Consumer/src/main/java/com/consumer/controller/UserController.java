@@ -4,13 +4,13 @@ package com.consumer.controller;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.consumer.common.feign.FeignService;
+import com.consumer.common.utils.R;
 import com.consumer.entity.UserEntity;
 import com.consumer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.consumer.common.utils.R;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class UserController {
     @RequestMapping(value = "/findOrderByUserId/{id}")
 //    @SentinelResource(value = "findOrderByUserId",
 //            blockHandler = "handleException")
-    public R  findOrderByUserId(@PathVariable("id") Integer id) {
+    public R findOrderByUserId(@PathVariable("id") Integer id) {
 
 //        try {
 //            // 模拟测试并发线程数限流
@@ -40,8 +40,8 @@ public class UserController {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        
-        //feign调用
+
+        //feign调用D555555555555
         R result = orderFeignService.findOrderByUserId(id);
 
         return result;
