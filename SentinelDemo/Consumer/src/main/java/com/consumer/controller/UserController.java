@@ -30,8 +30,7 @@ public class UserController {
     FeignService orderFeignService;
 
     @RequestMapping(value = "/findOrderByUserId/{id}")
-//    @SentinelResource(value = "findOrderByUserId",
-//            blockHandler = "handleException")
+    @SentinelResource(value = "findOrderByUserId", blockHandler = "handleException", fallback="fallback")
     public R findOrderByUserId(@PathVariable("id") Integer id) {
 
 //        try {
