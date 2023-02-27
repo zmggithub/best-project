@@ -1,0 +1,8 @@
+server:
+  port: 8995
+spring:
+  application:
+    name: nettyServer
+
+logging:
+  config: classpath:log4j2.xml #启用的日志配置文件

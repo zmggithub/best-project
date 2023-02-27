@@ -1,0 +1,8 @@
+server:
+  port: 9527
+spring:
+  application:
+    name: applicationServer
+
+logging:
+  config: classpath:log4j2.xml #启用的日志配置文件
