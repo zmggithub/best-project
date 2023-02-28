@@ -5,8 +5,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
 
 /**
  * TODO
@@ -26,6 +34,7 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
      * @throws Exception
      */
     @Override
+    @Trace
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         ByteBuf msgByteBuf = (ByteBuf) msg;
@@ -41,6 +50,14 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
 
         // 真正处理信息的方法
         list.forEach(v -> handler(v, ctx));
+
+        logger.info("进入参数： clientRequest");
+        String url = "http://localhost:9527/clientRequest";
+        HttpEntity<Object> request = new HttpEntity<>(null,null);
+
+
+        ResponseEntity<String> exchange = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+        logger.info("返回结果：" + exchange);
 
     }
 
@@ -110,6 +127,7 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
      * @param ctx
      */
     private void handler(byte[] msgBytes, ChannelHandlerContext ctx) {
+
 
     }
 

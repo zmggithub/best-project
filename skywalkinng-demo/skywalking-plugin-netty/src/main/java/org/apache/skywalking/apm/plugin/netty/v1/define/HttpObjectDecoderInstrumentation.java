@@ -23,7 +23,7 @@ import net.bytebuddy.matcher.ElementMatcher;
 
 public class HttpObjectDecoderInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
     private static final String ENHANCE_CLASS = "io.netty.handler.codec.http.HttpObjectDecoder";
-    private static final String DECODE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.http.v4.DecodeInterceptor";
+    private static final String DECODE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.DecodeInterceptor";
 
     protected ClassMatch enhanceClass() {
         return byName(ENHANCE_CLASS);

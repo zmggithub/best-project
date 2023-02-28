@@ -23,8 +23,8 @@ import net.bytebuddy.matcher.ElementMatcher;
 
 public class ChannelInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
     private static final String ENHANCE_CLASS = "io.netty.channel.AbstractChannel";
-    private static final String CONSTRUCTOR_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.http.v4.ChannelConstructorInterceptor";
-    private static final String CHANNEL_WRITE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.http.v4.ChannelWriteInterceptor";
+    private static final String CONSTRUCTOR_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.ChannelConstructorInterceptor";
+    private static final String CHANNEL_WRITE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.ChannelWriteInterceptor";
 
     protected ClassMatch enhanceClass() {
         return byName(ENHANCE_CLASS);

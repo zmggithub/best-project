@@ -42,32 +42,4 @@ public class NettyServer {
         worker.shutdownGracefully();
     }
 
-    // private int port = 12255;
-    //
-    // @PostConstruct
-    // public void start() throws InterruptedException {
-    //     EventLoopGroup bossGroup = new NioEventLoopGroup();
-    //     EventLoopGroup workerGroup = new NioEventLoopGroup();
-    //     try {
-    //         ServerBootstrap serverBootstrap = new ServerBootstrap();
-    //         serverBootstrap.group(bossGroup, workerGroup)
-    //                 .channel(NioServerSocketChannel.class)
-    //                 .childHandler(new ChannelInitializer<SocketChannel>() {
-    //                     @Override
-    //                     protected void initChannel(SocketChannel ch) throws Exception {
-    //                         ChannelPipeline pipeline = ch.pipeline();
-    //                         pipeline.addLast(new StringDecoder());
-    //                         pipeline.addLast(new IdleStateHandler(5, 0, 0));
-    //                         pipeline.addLast(new MessageHandler());
-    //                     }
-    //                 });
-    //
-    //         ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
-    //         channelFuture.channel().closeFuture().sync();
-    //     } finally {
-    //         bossGroup.shutdownGracefully();
-    //         workerGroup.shutdownGracefully();
-    //     }
-    // }
-
 }

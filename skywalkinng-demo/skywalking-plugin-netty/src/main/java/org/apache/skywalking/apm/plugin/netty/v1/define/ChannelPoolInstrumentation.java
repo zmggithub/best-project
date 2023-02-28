@@ -26,7 +26,7 @@ public class ChannelPoolInstrumentation extends ClassInstanceMethodsEnhancePlugi
             "io.netty.channel.pool.SimpleChannelPool",
             "io.netty.channel.pool.FixedChannelPool" };
 
-    private static final String ACQUIRE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.http.v4.ChannelPoolAcquireInterceptor";
+    private static final String ACQUIRE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.ChannelPoolAcquireInterceptor";
 
     protected ClassMatch enhanceClass() {
         return byMultiClassMatch(ENHANCE_CLASSES);
