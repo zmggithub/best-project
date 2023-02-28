@@ -110,7 +110,7 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
      * @param ctx
      */
     private void handler(byte[] msgBytes, ChannelHandlerContext ctx) {
-        // 具体业务代码略,可以通过ctx的write和flush方法回应客户端的信息
+
     }
 
 

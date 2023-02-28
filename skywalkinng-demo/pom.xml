@@ -8,6 +8,7 @@
         <module>skyClient</module>
         <module>skyMonitor</module>
         <module>skyNettyDemo</module>
+        <module>skywalking-plugin-netty</module>
     </modules>
 
     <parent>
