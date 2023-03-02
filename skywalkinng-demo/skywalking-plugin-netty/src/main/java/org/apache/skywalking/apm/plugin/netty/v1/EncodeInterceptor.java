@@ -20,6 +20,7 @@ import io.netty.handler.codec.http.HttpResponse;
  */
 
 public class EncodeInterceptor implements InstanceMethodsAroundInterceptor {
+    @Override
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, MethodInterceptResult result) throws Throwable {
         ChannelHandlerContext context = (ChannelHandlerContext) allArguments[0];
         Object msg = allArguments[1];
@@ -30,6 +31,7 @@ public class EncodeInterceptor implements InstanceMethodsAroundInterceptor {
         return;
     }
 
+    @Override
     public Object afterMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, Object ret) throws Throwable {
         ChannelHandlerContext context = (ChannelHandlerContext) allArguments[0];
         Object msg = allArguments[1];
@@ -40,6 +42,7 @@ public class EncodeInterceptor implements InstanceMethodsAroundInterceptor {
         return ret;
     }
 
+    @Override
     public void handleMethodException(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, Throwable t) {
         ChannelHandlerContext context = (ChannelHandlerContext) allArguments[0];
         TracingHelper.onException(t, context);

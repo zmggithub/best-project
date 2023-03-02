@@ -3,18 +3,16 @@ package com.nettydemo;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.opentracing.Tracer;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.skywalking.apm.toolkit.trace.Trace;
+import org.apache.skywalking.apm.toolkit.opentracing.SkywalkingTracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.Resource;
 
 /**
  * TODO
@@ -26,6 +24,7 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
 
     private static Logger logger = LoggerFactory.getLogger(MessageHandler.class);
 
+    private final Tracer tracer = new SkywalkingTracer();
     /**
      * 本方法用于读取客户端发送的信息
      *
@@ -34,7 +33,6 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
      * @throws Exception
      */
     @Override
-    @Trace
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         ByteBuf msgByteBuf = (ByteBuf) msg;
@@ -54,7 +52,6 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
         logger.info("进入参数： clientRequest");
         String url = "http://localhost:9527/clientRequest";
         HttpEntity<Object> request = new HttpEntity<>(null,null);
-
 
         ResponseEntity<String> exchange = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
         logger.info("返回结果：" + exchange);

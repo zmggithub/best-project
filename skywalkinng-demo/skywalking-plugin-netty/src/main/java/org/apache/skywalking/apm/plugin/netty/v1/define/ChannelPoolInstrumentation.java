@@ -28,25 +28,31 @@ public class ChannelPoolInstrumentation extends ClassInstanceMethodsEnhancePlugi
 
     private static final String ACQUIRE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.ChannelPoolAcquireInterceptor";
 
+    @Override
     protected ClassMatch enhanceClass() {
         return byMultiClassMatch(ENHANCE_CLASSES);
     }
 
+    @Override
     public ConstructorInterceptPoint[] getConstructorsInterceptPoints() {
         return null;
     }
 
+    @Override
     public InstanceMethodsInterceptPoint[] getInstanceMethodsInterceptPoints() {
         return new InstanceMethodsInterceptPoint[] {
                 new InstanceMethodsInterceptPoint() {
+                    @Override
                     public ElementMatcher<MethodDescription> getMethodsMatcher() {
                         return named("acquire").and(takesArguments(1));
                     }
 
+                    @Override
                     public String getMethodsInterceptor() {
                         return ACQUIRE_INTERCEPT_CLASS;
                     }
 
+                    @Override
                     public boolean isOverrideArgs() {
                         return false;
                     }

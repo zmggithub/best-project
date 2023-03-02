@@ -9,6 +9,7 @@
         <module>skyMonitor</module>
         <module>skyNettyDemo</module>
         <module>skywalking-plugin-netty</module>
+        <module>skywalking-plugin-netty-channelbound</module>
     </modules>
 
     <parent>
@@ -54,11 +55,11 @@
             <version>8.11.0</version>
         </dependency>
 
-        <!--  <dependency>
+          <dependency>
               <groupId>org.apache.skywalking</groupId>
               <artifactId>apm-toolkit-opentracing</artifactId>
               <version>8.11.0</version>
-          </dependency>-->
+          </dependency>
 
 
 

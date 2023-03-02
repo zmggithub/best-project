@@ -22,28 +22,35 @@ import net.bytebuddy.matcher.ElementMatcher;
  */
 
 public class HttpObjectDecoderInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
+
     private static final String ENHANCE_CLASS = "io.netty.handler.codec.http.HttpObjectDecoder";
     private static final String DECODE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.DecodeInterceptor";
 
+    @Override
     protected ClassMatch enhanceClass() {
         return byName(ENHANCE_CLASS);
     }
 
+    @Override
     public ConstructorInterceptPoint[] getConstructorsInterceptPoints() {
         return null;
     }
 
+    @Override
     public InstanceMethodsInterceptPoint[] getInstanceMethodsInterceptPoints() {
         return new InstanceMethodsInterceptPoint[] {
                 new InstanceMethodsInterceptPoint() {
+                    @Override
                     public ElementMatcher<MethodDescription> getMethodsMatcher() {
                         return named("decode").and(takesArguments(3));
                     }
 
+                    @Override
                     public String getMethodsInterceptor() {
                         return DECODE_INTERCEPT_CLASS;
                     }
 
+                    @Override
                     public boolean isOverrideArgs() {
                         return false;
                     }

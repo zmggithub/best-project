@@ -3,33 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>skywalking-plugin-netty</artifactId>
+
+    <artifactId>skywalking-plugin-netty-channelbound</artifactId>
     <groupId>com.skywalking.zmg</groupId>
     <version>0.0.1</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <skywalking.version>8.7.0</skywalking.version>
+        <netty.version>4.1.31.Final</netty.version>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <compiler.version>1.8</compiler.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shade.package>org.apache.skywalking.apm.dependencies</shade.package>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sdk.plugin.related.dir />
         <shade.net.bytebuddy.source>net.bytebuddy</shade.net.bytebuddy.source>
         <shade.net.bytebuddy.target>${shade.package}.${shade.net.bytebuddy.source}</shade.net.bytebuddy.target>
 
-        <agent.package.dest.dir>${project.build.directory}${sdk.plugin.related.dir}/../../../../skywalking-agent</agent.package.dest.dir>
-        <plugin.dest.dir>${agent.package.dest.dir}/plugins</plugin.dest.dir>
-
-        <ant-contrib.version>1.0b3</ant-contrib.version>
-        <ant-nodeps.version>1.8.1</ant-nodeps.version>
-        <skywalking.version>8.7.0</skywalking.version>
-        <netty.version>4.1.65.Final</netty.version>
     </properties>
 
     <dependencies>
@@ -84,5 +74,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

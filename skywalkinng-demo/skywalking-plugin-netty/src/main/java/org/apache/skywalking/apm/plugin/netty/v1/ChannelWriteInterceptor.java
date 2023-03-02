@@ -21,6 +21,7 @@ import io.netty.channel.Channel;
 
 public class ChannelWriteInterceptor implements InstanceMethodsAroundInterceptor {
 
+    @Override
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, MethodInterceptResult result) throws Throwable {
         Channel channel = (Channel) objInst;
         if (channel.attr(Constants.KEY_CONTEXT).get() == null && ContextManager.isActive()) {
@@ -30,10 +31,12 @@ public class ChannelWriteInterceptor implements InstanceMethodsAroundInterceptor
         return;
     }
 
+    @Override
     public Object afterMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, Object ret) throws Throwable {
         return ret;
     }
 
+    @Override
     public void handleMethodException(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, Throwable t) {
         return;
     }

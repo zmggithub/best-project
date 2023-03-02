@@ -25,16 +25,19 @@ import io.netty.util.concurrent.Promise;
 public class ChannelPoolAcquireInterceptor implements InstanceMethodsAroundInterceptor {
 
     @SuppressWarnings("unchecked")
+    @Override
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, MethodInterceptResult result) throws Throwable {
         Promise<Channel> promise = (Promise<Channel>) allArguments[0];
         promise.addListener(new TracingContextBinder());
         return;
     }
 
+    @Override
     public Object afterMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, Object ret) throws Throwable {
         return ret;
     }
 
+    @Override
     public void handleMethodException(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, Throwable t) {
         return;
     }
@@ -53,6 +56,7 @@ public class ChannelPoolAcquireInterceptor implements InstanceMethodsAroundInter
             }
         }
 
+        @Override
         public void operationComplete(Future<Channel> future) throws Exception {
             if (tracingContext == null) {
                 return;
