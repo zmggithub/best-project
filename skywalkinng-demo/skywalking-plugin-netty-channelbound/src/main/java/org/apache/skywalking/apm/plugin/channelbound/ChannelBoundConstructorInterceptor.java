@@ -8,14 +8,20 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import java.lang.reflect.Method;
 import java.net.SocketAddress;
+
+import io.netty.channel.ServerChannel;
+import org.apache.skywalking.apm.agent.core.context.AbstractTracerContext;
 import org.apache.skywalking.apm.agent.core.context.CarrierItem;
 import org.apache.skywalking.apm.agent.core.context.ContextCarrier;
 import org.apache.skywalking.apm.agent.core.context.ContextManager;
+import org.apache.skywalking.apm.agent.core.context.TracingContext;
 import org.apache.skywalking.apm.agent.core.context.tag.Tags;
 import org.apache.skywalking.apm.agent.core.context.trace.AbstractSpan;
 import org.apache.skywalking.apm.agent.core.context.trace.SpanLayer;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.EnhancedInstance;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.InstanceConstructorInterceptor;
+
+import static org.apache.skywalking.apm.plugin.channelbound.Constants.KEY_CONTEXT;
 
 /**
  * 当前类是主要是对目标实例的构造方法进行增强
@@ -28,22 +34,22 @@ public class ChannelBoundConstructorInterceptor implements InstanceConstructorIn
 
     @Override
     public void onConstruct(EnhancedInstance enhancedInstance, Object[] objects) throws Throwable {
-        Method method = (Method) objects[1];
-        String methodName = buildMethodName(method);
-
-        enhancedInstance.setSkyWalkingDynamicField(methodName);
+        if (enhancedInstance instanceof ServerChannel) {
+            return;
+        }
 
         System.out.println("ChannelConstructorInterceptor");
         AbstractChannel channel = (AbstractChannel) enhancedInstance;
         channel.pipeline().addLast(new ErrorHandler()); /* 是不是可能有顺序问题 */
+        // channel.pipeline().addLast(new boundHandler()); /* 是不是可能有顺序问题 */
 
     }
 
     private static class ErrorHandler extends ChannelDuplexHandler {
 
         @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            System.out.println("sdfsdfsdfd!!!!!!!!!!!!!!!!!!");
+        public void handlerAdded(ChannelHandlerContext ctx) {
+            System.out.println("handlerAdded!!!!!!!!!!!!handlerAdded!!!!!!");
             ContextCarrier contextCarrier = new ContextCarrier();
             CarrierItem next = contextCarrier.items();
             while (next.hasNext()) {
@@ -60,6 +66,13 @@ public class ChannelBoundConstructorInterceptor implements InstanceConstructorIn
 
             ctx.channel().attr(Constants.KEY_CONTEXT).set(null);
             System.out.println(ctx);
+
+        }
+
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            System.out.println("channelRead!!!!!channelRead!!!!!!!!channelRead!!!!!");
 
 
             super.channelRead(ctx, msg);

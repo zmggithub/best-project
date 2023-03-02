@@ -21,7 +21,7 @@ public class ChannelInboundHandlerEnhance extends ClassInstanceMethodsEnhancePlu
     private static final String ENHANCE_CLASS = "io.netty.channel.AbstractChannel";
     // private static final String ENHANCE_CLASS = "io.netty.channel.AbstractChannel";
 
-    private static final String CHANNEL_WRITE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.channelbound.ChannelBoundWriteInterceptor";
+    private static final String CHANNEL_WRITE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.channelbound.ChannelReadInterceptor";
     private static final String CONSTRUCTOR_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.channelbound.ChannelBoundConstructorInterceptor";
 
     @Override

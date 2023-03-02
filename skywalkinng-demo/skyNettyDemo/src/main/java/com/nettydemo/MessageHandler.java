@@ -3,10 +3,14 @@ package com.nettydemo;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.skywalking.apm.toolkit.opentracing.SkywalkingTracer;
+import org.apache.skywalking.apm.toolkit.trace.ActiveSpan;
+import org.apache.skywalking.apm.toolkit.trace.Trace;
+import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -52,6 +56,10 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
         logger.info("进入参数： clientRequest");
         String url = "http://localhost:9527/clientRequest";
         HttpEntity<Object> request = new HttpEntity<>(null,null);
+        String traceId = TraceContext.traceId();
+
+
+
 
         ResponseEntity<String> exchange = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
         logger.info("返回结果：" + exchange);

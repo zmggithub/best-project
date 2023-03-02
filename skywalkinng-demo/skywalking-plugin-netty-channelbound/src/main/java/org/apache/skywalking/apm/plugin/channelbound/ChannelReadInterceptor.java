@@ -19,6 +19,9 @@ public class ChannelReadInterceptor implements InstanceMethodsAroundInterceptor 
 
     @Override
     public void beforeMethod(EnhancedInstance enhancedInstance, Method method, Object[] objects, Class<?>[] classes, MethodInterceptResult methodInterceptResult) throws Throwable {
+
+        Object skyWalkingDynamicField = enhancedInstance.getSkyWalkingDynamicField();
+
         System.out.println("ChannelBoundWriteInterceptor beforeMethod!!!");
     }
 

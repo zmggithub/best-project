@@ -51,6 +51,7 @@ public class NettyServerThread extends Thread {
                     // 注册handler
                     ch.pipeline().addLast(new ReadTimeoutHandler(10));
                     ch.pipeline().addLast(new MessageHandler());
+
                 } else {
                     ch.close();
                 }
