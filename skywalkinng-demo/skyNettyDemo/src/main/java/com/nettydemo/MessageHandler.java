@@ -3,17 +3,21 @@ package com.nettydemo;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.opentracing.ActiveSpan;
+import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.apache.skywalking.apm.toolkit.opentracing.SkywalkingTracer;
-import org.apache.skywalking.apm.toolkit.trace.ActiveSpan;
 import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +32,6 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
 
     private static Logger logger = LoggerFactory.getLogger(MessageHandler.class);
 
-    private final Tracer tracer = new SkywalkingTracer();
     /**
      * 本方法用于读取客户端发送的信息
      *
@@ -38,30 +41,23 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-
-        ByteBuf msgByteBuf = (ByteBuf) msg;
-        logger.info(msgByteBuf.toString());
-        byte[] msgBytes = new byte[msgByteBuf.readableBytes()];
-        // msg中存储的是ByteBuf类型的数据，把数据读取到byte[]中
-        msgByteBuf.readBytes(msgBytes);
-        // 释放资源
-        msgByteBuf.release();
-
-        // 可能返回到的msgByteBuf是多条信息拼起来的,把他们拆开分别处理
-        List<byte[]> list = getMsgList(msgBytes);
-
-        // 真正处理信息的方法
-        list.forEach(v -> handler(v, ctx));
+        //
+        // ByteBuf msgByteBuf = (ByteBuf) msg;
+        // logger.info(msgByteBuf.toString());
+        // byte[] msgBytes = new byte[msgByteBuf.readableBytes()];
+        // // msg中存储的是ByteBuf类型的数据，把数据读取到byte[]中
+        // msgByteBuf.readBytes(msgBytes);
+        // // 释放资源
+        // msgByteBuf.release();
+        //
+        // // 可能返回到的msgByteBuf是多条信息拼起来的,把他们拆开分别处理
+        // List<byte[]> list = getMsgList(msgBytes);
+        //
+        // // 真正处理信息的方法
+        // list.forEach(v -> handler(v, ctx));
 
         logger.info("进入参数： clientRequest");
-        String url = "http://localhost:9527/clientRequest";
-        HttpEntity<Object> request = new HttpEntity<>(null,null);
-        String traceId = TraceContext.traceId();
-
-
-
-
-        ResponseEntity<String> exchange = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+        ResponseEntity<String> exchange = HttpClientHandler.sendHttp();
         logger.info("返回结果：" + exchange);
 
     }

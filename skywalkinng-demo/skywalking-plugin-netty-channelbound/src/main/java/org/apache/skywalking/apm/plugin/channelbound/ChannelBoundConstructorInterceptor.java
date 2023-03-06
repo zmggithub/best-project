@@ -6,22 +6,19 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import java.lang.reflect.Method;
-import java.net.SocketAddress;
-
 import io.netty.channel.ServerChannel;
+import java.net.SocketAddress;
 import org.apache.skywalking.apm.agent.core.context.AbstractTracerContext;
 import org.apache.skywalking.apm.agent.core.context.CarrierItem;
 import org.apache.skywalking.apm.agent.core.context.ContextCarrier;
 import org.apache.skywalking.apm.agent.core.context.ContextManager;
-import org.apache.skywalking.apm.agent.core.context.TracingContext;
 import org.apache.skywalking.apm.agent.core.context.tag.Tags;
 import org.apache.skywalking.apm.agent.core.context.trace.AbstractSpan;
 import org.apache.skywalking.apm.agent.core.context.trace.SpanLayer;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.EnhancedInstance;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.InstanceConstructorInterceptor;
-
 import static org.apache.skywalking.apm.plugin.channelbound.Constants.KEY_CONTEXT;
+import static org.apache.skywalking.apm.plugin.channelbound.TracingHelper.getTracingContext;
 
 /**
  * 当前类是主要是对目标实例的构造方法进行增强
@@ -31,7 +28,6 @@ import static org.apache.skywalking.apm.plugin.channelbound.Constants.KEY_CONTEX
  */
 public class ChannelBoundConstructorInterceptor implements InstanceConstructorInterceptor {
 
-
     @Override
     public void onConstruct(EnhancedInstance enhancedInstance, Object[] objects) throws Throwable {
         if (enhancedInstance instanceof ServerChannel) {
@@ -40,9 +36,7 @@ public class ChannelBoundConstructorInterceptor implements InstanceConstructorIn
 
         System.out.println("ChannelConstructorInterceptor");
         AbstractChannel channel = (AbstractChannel) enhancedInstance;
-        channel.pipeline().addLast(new ErrorHandler()); /* 是不是可能有顺序问题 */
-        // channel.pipeline().addLast(new boundHandler()); /* 是不是可能有顺序问题 */
-
+        channel.pipeline().addLast(new ErrorHandler());
     }
 
     private static class ErrorHandler extends ChannelDuplexHandler {
@@ -64,7 +58,7 @@ public class ChannelBoundConstructorInterceptor implements InstanceConstructorIn
             SpanLayer.asHttp(span);
             System.out.println(span);
 
-            ctx.channel().attr(Constants.KEY_CONTEXT).set(null);
+            ctx.channel().attr(Constants.KEY_CONTEXT).set(getTracingContext());
             System.out.println(ctx);
 
         }
@@ -107,12 +101,19 @@ public class ChannelBoundConstructorInterceptor implements InstanceConstructorIn
                 }
             }));
         }
+
+        @Override
+        public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+
+            AbstractTracerContext tracingContext = ctx.channel().attr(KEY_CONTEXT).get();
+            if (tracingContext == null) {
+                return;
+            }
+            AbstractSpan span = tracingContext.activeSpan();
+            tracingContext.stopSpan(span);
+
+            super.close(ctx, promise);
+        }
     }
 
-    protected String buildMethodName(Method method) {
-        String className = method.getDeclaringClass().getName();
-        String methodName = method.getName();
-
-        return className + "." + methodName;
-    }
 }
