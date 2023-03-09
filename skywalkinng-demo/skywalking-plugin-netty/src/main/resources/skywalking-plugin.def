@@ -1,1 +1,4 @@
-netty-4.x-zmg=org.apache.skywalking.apm.plugin.zmg.define.NettyChannelHandlerEnhance
+netty-zmg4.x=org.apache.skywalking.apm.plugin.zmg.define.NettyChannelHandlerEnhance
+netty-zmg4.x=org.apache.skywalking.apm.plugin.zmg.define.HttpObjectDecoderInstrumentation
+netty-zmg4.x=org.apache.skywalking.apm.plugin.zmg.define.HttpObjectEncoderInstrumentation
+netty-zmg4.x=org.apache.skywalking.apm.plugin.zmg.define.ChannelPoolInstrumentation
