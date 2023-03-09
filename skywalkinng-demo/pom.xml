@@ -9,7 +9,6 @@
         <module>skyMonitor</module>
         <module>skyNettyDemo</module>
         <module>skywalking-plugin-netty</module>
-        <module>skywalking-plugin-netty-channelbound</module>
     </modules>
 
     <parent>

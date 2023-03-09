@@ -1,19 +1,14 @@
-/**
- * 
- */
-package org.apache.skywalking.apm.plugin.netty.v1.define;
+package org.apache.skywalking.apm.plugin.zmg.define;
 
+import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.matcher.ElementMatcher;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
-import static org.apache.skywalking.apm.agent.core.plugin.match.MultiClassNameMatch.byMultiClassMatch;
-
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.ConstructorInterceptPoint;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.InstanceMethodsInterceptPoint;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassInstanceMethodsEnhancePluginDefine;
 import org.apache.skywalking.apm.agent.core.plugin.match.ClassMatch;
-
-import net.bytebuddy.description.method.MethodDescription;
-import net.bytebuddy.matcher.ElementMatcher;
+import static org.apache.skywalking.apm.agent.core.plugin.match.NameMatch.byName;
 
 /**
  * TODO 此处填写 class 信息
@@ -21,16 +16,13 @@ import net.bytebuddy.matcher.ElementMatcher;
  * @author wangwb (mailto:wangwb@primeton.com)
  */
 
-public class ChannelPoolInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
-    private static final String[] ENHANCE_CLASSES = new String[] {
-            "io.netty.channel.pool.SimpleChannelPool",
-            "io.netty.channel.pool.FixedChannelPool" };
-
-    private static final String ACQUIRE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.ChannelPoolAcquireInterceptor";
+public class HttpObjectDecoderInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
+    private static final String ENHANCE_CLASS = "io.netty.handler.codec.http.HttpObjectDecoder";
+    private static final String DECODE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.http.v4.DecodeInterceptor";
 
     @Override
     protected ClassMatch enhanceClass() {
-        return byMultiClassMatch(ENHANCE_CLASSES);
+        return byName(ENHANCE_CLASS);
     }
 
     @Override
@@ -44,12 +36,12 @@ public class ChannelPoolInstrumentation extends ClassInstanceMethodsEnhancePlugi
                 new InstanceMethodsInterceptPoint() {
                     @Override
                     public ElementMatcher<MethodDescription> getMethodsMatcher() {
-                        return named("acquire").and(takesArguments(1));
+                        return named("decode").and(takesArguments(3));
                     }
 
                     @Override
                     public String getMethodsInterceptor() {
-                        return ACQUIRE_INTERCEPT_CLASS;
+                        return DECODE_INTERCEPT_CLASS;
                     }
 
                     @Override

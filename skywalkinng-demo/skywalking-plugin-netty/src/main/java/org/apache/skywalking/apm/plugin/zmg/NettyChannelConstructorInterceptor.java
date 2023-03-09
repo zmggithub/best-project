@@ -1,4 +1,4 @@
-package org.apache.skywalking.apm.plugin.channelbound;
+package org.apache.skywalking.apm.plugin.zmg;
 
 import io.netty.channel.AbstractChannel;
 import io.netty.channel.ChannelDuplexHandler;
@@ -17,8 +17,8 @@ import org.apache.skywalking.apm.agent.core.context.trace.AbstractSpan;
 import org.apache.skywalking.apm.agent.core.context.trace.SpanLayer;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.EnhancedInstance;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.InstanceConstructorInterceptor;
-import static org.apache.skywalking.apm.plugin.channelbound.Constants.KEY_CONTEXT;
-import static org.apache.skywalking.apm.plugin.channelbound.TracingHelper.getTracingContext;
+import static org.apache.skywalking.apm.plugin.zmg.Constants.KEY_CONTEXT;
+import static org.apache.skywalking.apm.plugin.zmg.TracingHelper.getTracingContext;
 
 /**
  * 当前类是主要是对目标实例的构造方法进行增强
@@ -26,49 +26,38 @@ import static org.apache.skywalking.apm.plugin.channelbound.TracingHelper.getTra
  * @Author zmgab@qq.com
  * @Date 2023/3/1 15:20
  */
-public class ChannelBoundConstructorInterceptor implements InstanceConstructorInterceptor {
+public class NettyChannelConstructorInterceptor implements InstanceConstructorInterceptor {
 
     @Override
     public void onConstruct(EnhancedInstance enhancedInstance, Object[] objects) throws Throwable {
         if (enhancedInstance instanceof ServerChannel) {
             return;
         }
-
-        System.out.println("ChannelConstructorInterceptor");
         AbstractChannel channel = (AbstractChannel) enhancedInstance;
-        channel.pipeline().addLast(new ErrorHandler());
+        channel.pipeline().addLast(new GatewayInterceptorHandler());
     }
 
-    private static class ErrorHandler extends ChannelDuplexHandler {
+    private static class GatewayInterceptorHandler extends ChannelDuplexHandler {
 
         @Override
         public void handlerAdded(ChannelHandlerContext ctx) {
-            System.out.println("handlerAdded!!!!!!!!!!!!handlerAdded!!!!!!");
             ContextCarrier contextCarrier = new ContextCarrier();
             CarrierItem next = contextCarrier.items();
             while (next.hasNext()) {
                 next = next.next();
                 next.setHeadValue(next.getHeadValue());
             }
-            System.out.println(next);
-            AbstractSpan span = ContextManager.createEntrySpan("localhost:9527", contextCarrier);
-            Tags.URL.set(span, "localhost:9527");
-            Tags.HTTP.METHOD.set(span,"request.method().name()");
-            span.setComponent(Constants.COMPONENT_NETTY_HTTP_SERVER);
+            String socketAddress = null == ctx.channel().remoteAddress() ?"/0.0.0.0:0000": ctx.channel().remoteAddress().toString();
+            AbstractSpan span = ContextManager.createEntrySpan(socketAddress.substring(1), contextCarrier);
+            Tags.URL.set(span, socketAddress);
+            Tags.HTTP.METHOD.set(span,ctx.name());
+            span.setComponent(Constants.COMPONENT_NETTY_KAYAK);
             SpanLayer.asHttp(span);
-            System.out.println(span);
-
             ctx.channel().attr(Constants.KEY_CONTEXT).set(getTracingContext());
-            System.out.println(ctx);
-
         }
-
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            System.out.println("channelRead!!!!!channelRead!!!!!!!!channelRead!!!!!");
-
-
             super.channelRead(ctx, msg);
         }
 
@@ -104,16 +93,88 @@ public class ChannelBoundConstructorInterceptor implements InstanceConstructorIn
 
         @Override
         public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-
             AbstractTracerContext tracingContext = ctx.channel().attr(KEY_CONTEXT).get();
-            if (tracingContext == null) {
-                return;
+            if (tracingContext != null) {
+                AbstractSpan span = tracingContext.activeSpan();
+                tracingContext.stopSpan(span);
             }
-            AbstractSpan span = tracingContext.activeSpan();
-            tracingContext.stopSpan(span);
-
-            super.close(ctx, promise);
+            super.close(ctx,promise);
         }
+//
+//        @Override
+//        public void bind(ChannelHandlerContext ctx, SocketAddress localAddress, ChannelPromise promise) throws Exception {
+//            super.bind(ctx, localAddress, promise);
+//        }
+//
+//        @Override
+//        public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+//            super.disconnect(ctx, promise);
+//        }
+//
+//        @Override
+//        public void deregister(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+//            super.deregister(ctx, promise);
+//        }
+//
+//        @Override
+//        public void read(ChannelHandlerContext ctx) throws Exception {
+//            super.read(ctx);
+//        }
+//
+//        @Override
+//        public void flush(ChannelHandlerContext ctx) throws Exception {
+//            super.flush(ctx);
+//        }
+//
+//        @Override
+//        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+//            super.channelRegistered(ctx);
+//        }
+//
+//        @Override
+//        public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+//            super.channelUnregistered(ctx);
+//        }
+//
+//        @Override
+//        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+//            super.channelActive(ctx);
+//        }
+//
+//        @Override
+//        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+//            super.channelInactive(ctx);
+//        }
+//
+//        @Override
+//        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+//            super.channelReadComplete(ctx);
+//        }
+//
+//        @Override
+//        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+//            super.userEventTriggered(ctx, evt);
+//        }
+//
+//        @Override
+//        public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+//            super.channelWritabilityChanged(ctx);
+//        }
+//
+//        @Override
+//        protected void ensureNotSharable() {
+//            super.ensureNotSharable();
+//        }
+//
+//        @Override
+//        public boolean isSharable() {
+//            return super.isSharable();
+//        }
+//
+//        @Override
+//        public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+//            super.handlerRemoved(ctx);
+//        }
     }
 
 }

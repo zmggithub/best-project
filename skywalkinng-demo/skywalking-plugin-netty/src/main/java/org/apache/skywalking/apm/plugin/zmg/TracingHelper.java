@@ -1,7 +1,4 @@
-/**
- * 
- */
-package org.apache.skywalking.apm.plugin.channelbound;
+package org.apache.skywalking.apm.plugin.zmg;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
@@ -18,9 +15,9 @@ import org.apache.skywalking.apm.agent.core.logging.api.ILog;
 import org.apache.skywalking.apm.agent.core.logging.api.LogManager;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassEnhancePluginDefine;
 
-import static org.apache.skywalking.apm.plugin.channelbound.Constants.COMPONENT_NETTY_HTTP_CLIENT;
-import static org.apache.skywalking.apm.plugin.channelbound.Constants.COMPONENT_NETTY_HTTP_SERVER;
-import static org.apache.skywalking.apm.plugin.channelbound.Constants.KEY_CONTEXT;
+import static org.apache.skywalking.apm.plugin.zmg.Constants.COMPONENT_NETTY_HTTP_CLIENT;
+import static org.apache.skywalking.apm.plugin.zmg.Constants.COMPONENT_NETTY_HTTP_SERVER;
+import static org.apache.skywalking.apm.plugin.zmg.Constants.KEY_CONTEXT;
 
 /**
  * 工具类

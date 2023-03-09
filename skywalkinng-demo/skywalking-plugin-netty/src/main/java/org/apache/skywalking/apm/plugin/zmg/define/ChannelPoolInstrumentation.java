@@ -1,19 +1,14 @@
-/**
- * 
- */
-package org.apache.skywalking.apm.plugin.netty.v1.define;
+package org.apache.skywalking.apm.plugin.zmg.define;
 
+import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.matcher.ElementMatcher;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
-import static org.apache.skywalking.apm.agent.core.plugin.match.NameMatch.byName;
-
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.ConstructorInterceptPoint;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.InstanceMethodsInterceptPoint;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassInstanceMethodsEnhancePluginDefine;
 import org.apache.skywalking.apm.agent.core.plugin.match.ClassMatch;
-
-import net.bytebuddy.description.method.MethodDescription;
-import net.bytebuddy.matcher.ElementMatcher;
+import static org.apache.skywalking.apm.agent.core.plugin.match.MultiClassNameMatch.byMultiClassMatch;
 
 /**
  * TODO 此处填写 class 信息
@@ -21,35 +16,32 @@ import net.bytebuddy.matcher.ElementMatcher;
  * @author wangwb (mailto:wangwb@primeton.com)
  */
 
-public class HttpObjectDecoderInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
+public class ChannelPoolInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
+    private static final String[] ENHANCE_CLASSES = new String[] {
+            "io.netty.channel.pool.SimpleChannelPool",
+            "io.netty.channel.pool.FixedChannelPool" };
 
-    private static final String ENHANCE_CLASS = "io.netty.handler.codec.http.HttpObjectDecoder";
-    private static final String DECODE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.DecodeInterceptor";
-
+    private static final String ACQUIRE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.http.v4.ChannelPoolAcquireInterceptor";
     @Override
     protected ClassMatch enhanceClass() {
-        return byName(ENHANCE_CLASS);
+        return byMultiClassMatch(ENHANCE_CLASSES);
     }
-
     @Override
     public ConstructorInterceptPoint[] getConstructorsInterceptPoints() {
         return null;
     }
-
     @Override
     public InstanceMethodsInterceptPoint[] getInstanceMethodsInterceptPoints() {
         return new InstanceMethodsInterceptPoint[] {
                 new InstanceMethodsInterceptPoint() {
                     @Override
                     public ElementMatcher<MethodDescription> getMethodsMatcher() {
-                        return named("decode").and(takesArguments(3));
+                        return named("acquire").and(takesArguments(1));
                     }
-
                     @Override
                     public String getMethodsInterceptor() {
-                        return DECODE_INTERCEPT_CLASS;
+                        return ACQUIRE_INTERCEPT_CLASS;
                     }
-
                     @Override
                     public boolean isOverrideArgs() {
                         return false;

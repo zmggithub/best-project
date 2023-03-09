@@ -1,20 +1,19 @@
 /**
  * 
  */
-package org.apache.skywalking.apm.plugin.netty.v1;
-
-import java.lang.reflect.Method;
-
-import org.apache.skywalking.apm.agent.core.context.AbstractTracerContext;
-import org.apache.skywalking.apm.agent.core.context.ContextManager;
-import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.EnhancedInstance;
-import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.InstanceMethodsAroundInterceptor;
-import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.MethodInterceptResult;
+package org.apache.skywalking.apm.plugin.zmg;
 
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.Promise;
+import java.lang.reflect.Method;
+import org.apache.skywalking.apm.agent.core.context.AbstractTracerContext;
+import org.apache.skywalking.apm.agent.core.context.ContextManager;
+import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.EnhancedInstance;
+import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.InstanceMethodsAroundInterceptor;
+import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.MethodInterceptResult;
+import static org.apache.skywalking.apm.plugin.zmg.Constants.KEY_CONTEXT;
 
 /**
  * TODO 此处填写 class 信息
@@ -24,8 +23,8 @@ import io.netty.util.concurrent.Promise;
 
 public class ChannelPoolAcquireInterceptor implements InstanceMethodsAroundInterceptor {
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, MethodInterceptResult result) throws Throwable {
         Promise<Channel> promise = (Promise<Channel>) allArguments[0];
         promise.addListener(new TracingContextBinder());
@@ -62,7 +61,7 @@ public class ChannelPoolAcquireInterceptor implements InstanceMethodsAroundInter
                 return;
             }
             if (future.isSuccess()) {
-                future.get().attr(Constants.KEY_CONTEXT).set(tracingContext);
+                future.get().attr(KEY_CONTEXT).set(tracingContext);
             } else {
                 if (future.cause() != null) {
                     tracingContext.activeSpan().errorOccurred().log(future.cause());

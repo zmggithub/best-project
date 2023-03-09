@@ -1,19 +1,17 @@
 /**
  * 
  */
-package org.apache.skywalking.apm.plugin.netty.v1.define;
+package org.apache.skywalking.apm.plugin.zmg.define;
 
+import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.matcher.ElementMatcher;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
-import static org.apache.skywalking.apm.agent.core.plugin.match.NameMatch.byName;
-
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.ConstructorInterceptPoint;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.InstanceMethodsInterceptPoint;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassInstanceMethodsEnhancePluginDefine;
 import org.apache.skywalking.apm.agent.core.plugin.match.ClassMatch;
-
-import net.bytebuddy.description.method.MethodDescription;
-import net.bytebuddy.matcher.ElementMatcher;
+import static org.apache.skywalking.apm.agent.core.plugin.match.NameMatch.byName;
 
 /**
  * TODO 此处填写 class 信息
@@ -23,7 +21,7 @@ import net.bytebuddy.matcher.ElementMatcher;
 
 public class HttpObjectEncoderInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
     private static final String ENHANCE_CLASS = "io.netty.handler.codec.http.HttpObjectEncoder";
-    private static final String ENCODE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.v1.EncodeInterceptor";
+    private static final String ENCODE_INTERCEPT_CLASS = "org.apache.skywalking.apm.plugin.netty.http.v4.EncodeInterceptor";
 
     @Override
     protected ClassMatch enhanceClass() {
